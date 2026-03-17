@@ -11,8 +11,8 @@ if not _env_file.exists():
 
 
 class Settings(BaseSettings):
-    database_url: str = "sqlite:///./data/app.db"
-    secret_key: str  # Required — no default, app will fail to start without it
+    database_url: str = "postgresql://localhost/bp_trip_dashboard"
+    secret_key: str  # Required — no default
     algorithm: str = "HS256"
     access_token_expire_minutes: int = 60 * 24  # 24 hours
 

@@ -18,9 +18,9 @@ A personal dashboard for organizing backpacking trips. Create trips with dates a
 
 - **Frontend**: React 18 + Vite + Tailwind CSS + Leaflet
 - **Backend**: Python + FastAPI + SQLAlchemy
-- **Database**: SQLite
+- **Database**: Supabase Postgres (SQLite for local dev)
 - **Auth**: JWT for admin sessions, UUID tokens for guest links
-- **Deployment**: Docker Compose + Nginx reverse proxy
+- **Deployment**: Vercel (frontend) + Render (backend) + Supabase (database)
 
 ## Quick Start
 
@@ -45,7 +45,7 @@ cp .env.example .env
 make dev
 ```
 
-This starts the FastAPI backend on `http://localhost:8000` and Vite dev server on `http://localhost:5173` in parallel.
+This starts the FastAPI backend on `http://localhost:8000` and Vite dev server on `http://localhost:5173` in parallel. Local dev uses SQLite — no Postgres setup needed.
 
 ## Local Development
 
@@ -86,6 +86,43 @@ make lint
 ```
 
 Runs ESLint on frontend and ruff/flake8 on backend.
+
+## Production Deployment
+
+### 1. Create a Supabase project
+
+1. Go to [supabase.com](https://supabase.com) and create a new project
+2. In the project settings, copy the **Direct connection string** (postgres://...)
+3. Store this securely — you'll need it for the backend
+
+### 2. Deploy the backend to Render
+
+1. Push the repository to GitHub
+2. In Render, create a new **Web Service** from the GitHub repo, select the `backend/` directory
+3. Set the environment variables:
+   - `DATABASE_URL`: Your Supabase connection string from step 1
+   - `SECRET_KEY`: A long random string for JWT signing
+   - `ADMIN_EMAIL`: Your admin account email
+   - `ADMIN_PASSWORD`: A strong admin password
+   - `CORS_ORIGINS`: Set to `["https://your-vercel-domain.vercel.app"]` (you'll update this after step 3)
+4. Deploy and note the Render backend URL (e.g., `https://your-backend.onrender.com`)
+
+### 3. Deploy the frontend to Vercel
+
+1. In Vercel, create a new project from your GitHub repo
+2. Set **Root Directory** to `frontend/`
+3. Set the environment variable:
+   - `VITE_API_URL`: Set to `https://your-backend.onrender.com/api` (replace with your Render URL from step 2)
+4. Deploy and note your Vercel domain
+
+### 4. Update CORS on Render
+
+Return to Render and update the `CORS_ORIGINS` environment variable with your Vercel domain:
+```
+["https://your-vercel-domain.vercel.app"]
+```
+
+Redeploy the backend.
 
 ## Project Structure
 
@@ -168,12 +205,12 @@ Copy `.env.example` to `.env` and set the following:
 
 | Variable | Description | Example |
 |----------|-------------|---------|
-| `DATABASE_URL` | SQLite connection string | `sqlite:///./data/app.db` |
+| `DATABASE_URL` | Postgres connection string (Supabase) or SQLite for local dev | `postgresql://user:pass@db.example.com/dbname` or `sqlite:///./data/app.db` |
 | `SECRET_KEY` | JWT signing key (use a long random string) | `your-secret-key-here` |
 | `ACCESS_TOKEN_EXPIRE_MINUTES` | JWT token expiration | `1440` (24 hours) |
 | `ADMIN_EMAIL` | Admin account email | `admin@example.com` |
 | `ADMIN_PASSWORD` | Admin account password (seeded on first run) | `changeme` |
-| `CORS_ORIGINS` | Comma-separated allowed frontend origins | `["http://localhost:5173","http://localhost:3000"]` |
+| `CORS_ORIGINS` | Comma-separated allowed frontend origins | `["https://your-domain.vercel.app"]` |
 
 ## Making Changes
 
@@ -193,14 +230,13 @@ rm backend/data/app.db
 make dev
 ```
 
-### Backup the SQLite database
+### Backup the SQLite database (local dev only)
 
 ```bash
-docker run --rm -v bp-trip-dashboard_sqlite_data:/data \
-  -v $(pwd):/backup alpine tar czf /backup/db-backup.tar.gz /data
+cp backend/data/app.db backend/data/app.db.backup
 ```
 
-### View logs
+### View logs (Docker Compose)
 
 ```bash
 docker compose logs -f backend    # Backend logs
@@ -208,13 +244,8 @@ docker compose logs -f frontend   # Frontend build logs
 docker compose logs -f nginx      # Nginx logs
 ```
 
-## Deployment
+### View logs (production)
 
-The `docker-compose.yml` is configured for production use. To deploy:
-
-1. Copy `.env.example` to `.env` on the production server
-2. Update `.env` with production values (strong passwords, proper origins, real domain)
-3. Run `docker compose up -d`
-4. Access the app at http://your-domain
-
-For HTTPS, add an Nginx reverse proxy or use a load balancer in front of this stack.
+- **Render backend**: View in the Render dashboard under "Logs"
+- **Vercel frontend**: View in the Vercel dashboard under "Deployments"
+- **Supabase database**: No manual backup needed — automated backups included

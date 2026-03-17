@@ -1,6 +1,6 @@
 import { getToken, clearToken } from './auth.js'
 
-const BASE = '/api'
+const BASE = import.meta.env.VITE_API_URL || '/api'
 
 /**
  * Core fetch wrapper. Adds Bearer token for admin routes.

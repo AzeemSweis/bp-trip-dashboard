@@ -45,8 +45,8 @@ def upgrade() -> None:
             nullable=False,
             server_default="planning",
         ),
-        sa.Column("created_at", sa.DateTime(), nullable=False, server_default=sa.text("(datetime('now'))")),
-        sa.Column("updated_at", sa.DateTime(), nullable=False, server_default=sa.text("(datetime('now'))")),
+        sa.Column("created_at", sa.DateTime(), nullable=False, server_default=sa.text("now()")),
+        sa.Column("updated_at", sa.DateTime(), nullable=False, server_default=sa.text("now()")),
         sa.PrimaryKeyConstraint("id"),
     )
 
@@ -67,7 +67,7 @@ def upgrade() -> None:
         sa.Column("name", sa.String(), nullable=False),
         sa.Column("token", sa.String(), nullable=False),
         sa.Column("notes", sa.Text(), nullable=True),
-        sa.Column("created_at", sa.DateTime(), nullable=False, server_default=sa.text("(datetime('now'))")),
+        sa.Column("created_at", sa.DateTime(), nullable=False, server_default=sa.text("now()")),
         sa.ForeignKeyConstraint(["trip_id"], ["trips.id"], ondelete="CASCADE"),
         sa.PrimaryKeyConstraint("id"),
         sa.UniqueConstraint("token"),
@@ -78,7 +78,7 @@ def upgrade() -> None:
         sa.Column("id", sa.Integer(), autoincrement=True, nullable=False),
         sa.Column("guest_id", sa.Integer(), nullable=False),
         sa.Column("label", sa.String(), nullable=False),
-        sa.Column("is_checked", sa.Boolean(), nullable=False, server_default=sa.text("0")),
+        sa.Column("is_checked", sa.Boolean(), nullable=False, server_default=sa.text("false")),
         sa.Column("sort_order", sa.Integer(), nullable=False, server_default=sa.text("0")),
         sa.ForeignKeyConstraint(["guest_id"], ["guests.id"], ondelete="CASCADE"),
         sa.PrimaryKeyConstraint("id"),
@@ -88,7 +88,7 @@ def upgrade() -> None:
         "checklist_templates",
         sa.Column("id", sa.Integer(), autoincrement=True, nullable=False),
         sa.Column("name", sa.String(), nullable=False),
-        sa.Column("created_at", sa.DateTime(), nullable=False, server_default=sa.text("(datetime('now'))")),
+        sa.Column("created_at", sa.DateTime(), nullable=False, server_default=sa.text("now()")),
         sa.PrimaryKeyConstraint("id"),
     )
 
@@ -111,3 +111,4 @@ def downgrade() -> None:
     op.drop_table("trail_links")
     op.drop_table("trips")
     op.drop_table("admin_user")
+    sa.Enum(name="tripstatus").drop(op.get_bind(), checkfirst=True)

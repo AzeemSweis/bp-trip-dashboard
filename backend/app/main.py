@@ -1,5 +1,4 @@
 import logging
-import os
 from contextlib import asynccontextmanager
 from typing import AsyncGenerator
 
@@ -19,14 +18,6 @@ logger = logging.getLogger(__name__)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
-    # Ensure data directory exists (for SQLite)
-    db_url = settings.database_url
-    if "sqlite" in db_url:
-        db_path = db_url.replace("sqlite:///", "")
-        data_dir = os.path.dirname(db_path)
-        if data_dir:
-            os.makedirs(data_dir, exist_ok=True)
-
     Base.metadata.create_all(bind=engine)
 
     # Seed admin user
