@@ -1,0 +1,61 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    env_file: .env
+    volumes:
+      # Named volume keeps the SQLite file alive across container replacements.
+      # The path matches DATABASE_URL=sqlite:///./data/app.db in .env.example.
+      - sqlite_data:/app/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    # The frontend image runs nginx internally (from its own Dockerfile) and
+    # has the built dist baked in at /usr/share/nginx/html. Rather than running
+    # two nginx processes, we use this container only to copy the static files
+    # into the shared volume, then let the nginx service serve them.
+    #
+    # On startup, cp -a copies the built files into the shared volume (only if
+    # the volume is empty or has changed). The container then exits — that's
+    # intentional; restart: no means compose won't try to restart it.
+    entrypoint: ["/bin/sh", "-c", "cp -a /usr/share/nginx/html/. /srv/static/ && echo 'static files copied'"]
+    volumes:
+      - static_files:/srv/static
+    restart: "no"
+
+  nginx:
+    image: nginx:1.27-alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - static_files:/usr/share/nginx/html:ro
+    depends_on:
+      backend:
+        condition: service_healthy
+      frontend:
+        condition: service_completed_successfully
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  sqlite_data:
+    # Backup: docker run --rm -v bp-trip-dashboard_sqlite_data:/data \
+    #   -v $(pwd):/backup alpine tar czf /backup/db-backup.tar.gz /data
+  static_files:
+    # Populated by the frontend service on each `docker compose up`.
+    # Shared read-only with nginx.
