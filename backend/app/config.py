@@ -1,5 +1,8 @@
+import json
 from pathlib import Path
+from typing import Union
 
+from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 # Look for .env in CWD first, then project root (one level up from backend/)
@@ -19,7 +22,20 @@ class Settings(BaseSettings):
     admin_email: str  # Required — no default
     admin_password: str  # Required — no default
 
-    cors_origins: list[str] = ["http://localhost:5173", "http://localhost:3000"]
+    cors_origins: Union[str, list[str]] = ["http://localhost:5173", "http://localhost:3000"]
+
+    @field_validator("cors_origins", mode="before")
+    @classmethod
+    def parse_cors_origins(cls, v):
+        if isinstance(v, list):
+            return v
+        if isinstance(v, str):
+            v = v.strip()
+            if v.startswith("["):
+                return json.loads(v)
+            # Accept comma-separated: "https://foo.com,https://bar.com"
+            return [origin.strip() for origin in v.split(",") if origin.strip()]
+        return v
 
     model_config = SettingsConfigDict(env_file=str(_env_file), env_file_encoding="utf-8", extra="ignore")
 
