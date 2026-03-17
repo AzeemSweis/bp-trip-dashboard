@@ -3,6 +3,7 @@
 COMPOSE = docker compose
 BACKEND_DIR = backend
 FRONTEND_DIR = frontend
+PYTHON = python3
 
 help: ## Show available targets
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | \
@@ -16,7 +17,7 @@ dev: ## Start backend and frontend dev servers concurrently (requires tmux or a 
 
 dev-backend: ## Start the FastAPI dev server (auto-reload)
 	@cd $(BACKEND_DIR) && \
-		[ -d venv ] || python3.9 -m venv venv && \
+		[ -d venv ] || $(PYTHON) -m venv venv && \
 		. venv/bin/activate && \
 		pip install -q -r requirements.txt && \
 		uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
@@ -44,7 +45,7 @@ logs: ## Tail logs from all services
 
 test: ## Run backend pytest suite
 	@cd $(BACKEND_DIR) && \
-		[ -d venv ] || python3.9 -m venv venv && \
+		[ -d venv ] || $(PYTHON) -m venv venv && \
 		. venv/bin/activate && \
 		pip install -q -r requirements.txt && \
 		pytest tests/ -v
@@ -54,7 +55,7 @@ lint: ## Run ESLint on frontend and ruff/flake8 on backend (if available)
 	@cd $(FRONTEND_DIR) && npm run lint
 	@echo "--- backend ---"
 	@cd $(BACKEND_DIR) && \
-		[ -d venv ] || python3.9 -m venv venv && \
+		[ -d venv ] || $(PYTHON) -m venv venv && \
 		. venv/bin/activate && \
 		(ruff check app/ 2>/dev/null || echo "(ruff not installed; skipping)")
 
