@@ -8,6 +8,7 @@ import { TripList } from './pages/TripList.jsx'
 import { TripDetail } from './pages/TripDetail.jsx'
 import { GuestChecklistManager } from './pages/GuestChecklistManager.jsx'
 import { GuestDashboard } from './pages/GuestDashboard.jsx'
+import { CalorieCalculator } from './pages/CalorieCalculator.jsx'
 
 export default function App() {
   useEffect(() => {
@@ -31,6 +32,7 @@ export default function App() {
           <Route path="trips" element={<TripList />} />
           <Route path="trips/:tripId" element={<TripDetail />} />
           <Route path="trips/:tripId/guests/:guestId" element={<GuestChecklistManager />} />
+          <Route path="calculator" element={<CalorieCalculator />} />
         </Route>
         <Route path="/" element={<Navigate to="/admin/trips" replace />} />
       </Routes>
