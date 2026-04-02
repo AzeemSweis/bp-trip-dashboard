@@ -1,13 +1,6 @@
 import { useState } from 'react'
 import { updateChecklistItem, deleteChecklistItem } from '../lib/api.js'
 
-/**
- * @param {object} props
- * @param {object} props.item - checklist item
- * @param {number} props.guestId
- * @param {function} props.onUpdated - called with updated item
- * @param {function} props.onDeleted - called with itemId
- */
 export function ChecklistItemRow({ item, guestId, onUpdated, onDeleted }) {
   const [editing, setEditing] = useState(false)
   const [label, setLabel] = useState(item.label)
@@ -50,10 +43,10 @@ export function ChecklistItemRow({ item, guestId, onUpdated, onDeleted }) {
   }
 
   return (
-    <li className="flex items-center gap-3 py-2 border-b border-gray-100 dark:border-gray-700 last:border-0">
-      <span className={`h-4 w-4 shrink-0 rounded border-2 ${item.is_checked ? 'bg-emerald-500 border-emerald-500' : 'border-gray-300 dark:border-gray-600'}`}>
+    <li className="flex items-center gap-3 py-2.5 group">
+      <span className={`h-5 w-5 shrink-0 rounded-md flex items-center justify-center transition-colors ${item.is_checked ? 'bg-forest-500' : 'border-2 border-stone-300 dark:border-stone-600'}`}>
         {item.is_checked && (
-          <svg className="h-3 w-3 text-white" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <svg className="h-3 w-3 text-white" viewBox="0 0 12 12" fill="none">
             <path d="M2 6l3 3 5-5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
         )}
@@ -67,11 +60,15 @@ export function ChecklistItemRow({ item, guestId, onUpdated, onDeleted }) {
           onChange={e => setLabel(e.target.value)}
           onBlur={handleSave}
           onKeyDown={handleKeyDown}
-          className="flex-1 text-sm bg-transparent border-b border-emerald-500 focus:outline-none"
+          className="flex-1 text-sm bg-transparent border-b-2 border-forest-500 focus:outline-none text-stone-800 dark:text-stone-100"
         />
       ) : (
         <span
-          className={`flex-1 text-sm cursor-pointer hover:text-emerald-600 dark:hover:text-emerald-400 ${item.is_checked ? 'line-through text-gray-400 dark:text-gray-500' : 'text-gray-800 dark:text-gray-200'}`}
+          className={`flex-1 text-sm cursor-pointer transition-colors ${
+            item.is_checked
+              ? 'line-through text-stone-400 dark:text-stone-500'
+              : 'text-stone-700 dark:text-stone-200 hover:text-forest-500 dark:hover:text-forest-400'
+          }`}
           onClick={() => setEditing(true)}
           title="Click to edit"
         >
@@ -79,11 +76,11 @@ export function ChecklistItemRow({ item, guestId, onUpdated, onDeleted }) {
         </span>
       )}
 
-      <span className="text-xs text-gray-400 dark:text-gray-500">#{item.sort_order}</span>
+      <span className="text-xs text-stone-300 dark:text-stone-600 font-mono">#{item.sort_order}</span>
 
       <button
         onClick={handleDelete}
-        className="text-gray-400 hover:text-red-500 dark:hover:text-red-400 transition-colors"
+        className="p-1 rounded-lg text-stone-300 hover:text-red-500 hover:bg-red-50 dark:text-stone-600 dark:hover:text-red-400 dark:hover:bg-red-900/20 opacity-0 group-hover:opacity-100 transition-all"
         aria-label={`Remove ${item.label}`}
       >
         <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">

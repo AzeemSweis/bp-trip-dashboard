@@ -3,11 +3,6 @@ import { updateTrip } from '../lib/api.js'
 
 const STATUS_OPTIONS = ['planning', 'ready', 'completed', 'cancelled']
 
-/**
- * @param {object} props
- * @param {object} props.trip - full trip object
- * @param {function} props.onUpdated - called with updated trip after save
- */
 export function TripInfoForm({ trip, onUpdated }) {
   const [form, setForm] = useState({
     name: trip.name || '',
@@ -61,84 +56,76 @@ export function TripInfoForm({ trip, onUpdated }) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-5">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="sm:col-span-2">
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-            Trip Name
-          </label>
+          <label className="label">Trip Name</label>
           <input
             type="text"
             name="name"
             value={form.name}
             onChange={handleChange}
             required
-            className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            className="input-field"
           />
         </div>
 
         <div className="sm:col-span-2">
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-            Description
-          </label>
+          <label className="label">Description</label>
           <textarea
             name="description"
             value={form.description}
             onChange={handleChange}
             rows={2}
-            className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            className="input-field"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-            Start Date
-          </label>
+          <label className="label">Start Date</label>
           <input
             type="date"
             name="start_date"
             value={form.start_date}
             onChange={handleChange}
             required
-            className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            className="input-field"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-            End Date <span className="text-gray-400">(optional)</span>
+          <label className="label">
+            End Date <span className="text-stone-400 font-normal">(optional)</span>
           </label>
           <input
             type="date"
             name="end_date"
             value={form.end_date}
             onChange={handleChange}
-            className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            className="input-field"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-            Start Time <span className="text-gray-400">(optional)</span>
+          <label className="label">
+            Start Time <span className="text-stone-400 font-normal">(optional)</span>
           </label>
           <input
             type="time"
             name="start_time"
             value={form.start_time}
             onChange={handleChange}
-            className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            className="input-field"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-            Status
-          </label>
+          <label className="label">Status</label>
           <select
             name="status"
             value={form.status}
             onChange={handleChange}
-            className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            className="input-field"
           >
             {STATUS_OPTIONS.map(s => (
               <option key={s} value={s}>{s.charAt(0).toUpperCase() + s.slice(1)}</option>
@@ -146,24 +133,24 @@ export function TripInfoForm({ trip, onUpdated }) {
           </select>
         </div>
 
+        <div className="sm:col-span-2 pt-2">
+          <p className="text-xs font-semibold text-stone-400 dark:text-stone-500 uppercase tracking-wider mb-3">Location</p>
+        </div>
+
         <div className="sm:col-span-2">
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-            Meeting Point Name
-          </label>
+          <label className="label">Meeting Point Name</label>
           <input
             type="text"
             name="meeting_point_name"
             value={form.meeting_point_name}
             onChange={handleChange}
             placeholder="e.g. Walmart parking lot on Charleston"
-            className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            className="input-field"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-            Meeting Point Lat
-          </label>
+          <label className="label">Meeting Point Lat</label>
           <input
             type="number"
             step="any"
@@ -171,14 +158,12 @@ export function TripInfoForm({ trip, onUpdated }) {
             value={form.meeting_point_lat}
             onChange={handleChange}
             placeholder="36.57"
-            className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            className="input-field"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-            Meeting Point Lng
-          </label>
+          <label className="label">Meeting Point Lng</label>
           <input
             type="number"
             step="any"
@@ -186,13 +171,13 @@ export function TripInfoForm({ trip, onUpdated }) {
             value={form.meeting_point_lng}
             onChange={handleChange}
             placeholder="-118.29"
-            className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            className="input-field"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-            Trailhead Lat <span className="text-gray-400">(optional)</span>
+          <label className="label">
+            Trailhead Lat <span className="text-stone-400 font-normal">(optional)</span>
           </label>
           <input
             type="number"
@@ -201,13 +186,13 @@ export function TripInfoForm({ trip, onUpdated }) {
             value={form.trail_lat}
             onChange={handleChange}
             placeholder="36.58"
-            className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            className="input-field"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-            Trailhead Lng <span className="text-gray-400">(optional)</span>
+          <label className="label">
+            Trailhead Lng <span className="text-stone-400 font-normal">(optional)</span>
           </label>
           <input
             type="number"
@@ -216,7 +201,7 @@ export function TripInfoForm({ trip, onUpdated }) {
             value={form.trail_lng}
             onChange={handleChange}
             placeholder="-118.29"
-            className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            className="input-field"
           />
         </div>
       </div>
@@ -226,14 +211,10 @@ export function TripInfoForm({ trip, onUpdated }) {
       )}
 
       <div className="flex items-center gap-3">
-        <button
-          type="submit"
-          disabled={saving}
-          className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white text-sm font-medium rounded-lg transition-colors"
-        >
-          {saving ? 'Saving…' : 'Save Changes'}
+        <button type="submit" disabled={saving} className="btn-primary">
+          {saving ? 'Saving...' : 'Save Changes'}
         </button>
-        {saved && <span className="text-sm text-emerald-600 dark:text-emerald-400">Saved!</span>}
+        {saved && <span className="text-sm text-forest-500 dark:text-forest-400 font-medium">Saved!</span>}
       </div>
     </form>
   )
