@@ -69,15 +69,15 @@ export function TripList() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center py-16 text-gray-400 dark:text-gray-500">
-        Loading trips…
+      <div className="flex items-center justify-center py-20 text-stone-400 dark:text-stone-500">
+        Loading trips...
       </div>
     )
   }
 
   if (error) {
     return (
-      <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-4 text-sm text-red-600 dark:text-red-400">
+      <div className="bg-red-50 dark:bg-red-900/20 rounded-2xl p-5 text-sm text-red-600 dark:text-red-400">
         Failed to load trips: {error}
       </div>
     )
@@ -85,25 +85,23 @@ export function TripList() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100">Trips</h1>
+      <div className="flex items-center justify-between mb-8">
+        <h1 className="font-display text-2xl font-bold text-stone-800 dark:text-stone-100">Your Trips</h1>
         <button
           onClick={() => setShowForm(f => !f)}
-          className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium rounded-lg transition-colors"
+          className="btn-primary"
         >
-          {showForm ? 'Cancel' : '+ Create Trip'}
+          {showForm ? 'Cancel' : '+ New Trip'}
         </button>
       </div>
 
       {showForm && (
-        <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-5 mb-6">
-          <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100 mb-4">New Trip</h2>
-          <form onSubmit={handleCreate} className="space-y-4">
+        <div className="card mb-8">
+          <h2 className="section-title mb-5">New Trip</h2>
+          <form onSubmit={handleCreate} className="space-y-5">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="sm:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Trip Name
-                </label>
+                <label className="label">Trip Name</label>
                 <input
                   type="text"
                   name="name"
@@ -111,72 +109,68 @@ export function TripList() {
                   onChange={handleChange}
                   required
                   placeholder="e.g. Mt. Whitney Summit"
-                  className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  className="input-field"
                 />
               </div>
 
               <div className="sm:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Description <span className="text-gray-400">(optional)</span>
+                <label className="label">
+                  Description <span className="text-stone-400 font-normal">(optional)</span>
                 </label>
                 <textarea
                   name="description"
                   value={form.description}
                   onChange={handleChange}
                   rows={2}
-                  className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  className="input-field"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Start Date
-                </label>
+                <label className="label">Start Date</label>
                 <input
                   type="date"
                   name="start_date"
                   value={form.start_date}
                   onChange={handleChange}
                   required
-                  className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  className="input-field"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  End Date <span className="text-gray-400">(optional)</span>
+                <label className="label">
+                  End Date <span className="text-stone-400 font-normal">(optional)</span>
                 </label>
                 <input
                   type="date"
                   name="end_date"
                   value={form.end_date}
                   onChange={handleChange}
-                  className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  className="input-field"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Start Time <span className="text-gray-400">(optional)</span>
+                <label className="label">
+                  Start Time <span className="text-stone-400 font-normal">(optional)</span>
                 </label>
                 <input
                   type="time"
                   name="start_time"
                   value={form.start_time}
                   onChange={handleChange}
-                  className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  className="input-field"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Status
-                </label>
+                <label className="label">Status</label>
                 <select
                   name="status"
                   value={form.status}
                   onChange={handleChange}
-                  className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  className="input-field"
                 >
                   {['planning', 'ready', 'completed', 'cancelled'].map(s => (
                     <option key={s} value={s}>{s.charAt(0).toUpperCase() + s.slice(1)}</option>
@@ -185,8 +179,8 @@ export function TripList() {
               </div>
 
               <div className="sm:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Meeting Point <span className="text-gray-400">(optional)</span>
+                <label className="label">
+                  Meeting Point <span className="text-stone-400 font-normal">(optional)</span>
                 </label>
                 <input
                   type="text"
@@ -194,7 +188,7 @@ export function TripList() {
                   value={form.meeting_point_name}
                   onChange={handleChange}
                   placeholder="e.g. Walmart parking lot on Charleston"
-                  className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  className="input-field"
                 />
               </div>
             </div>
@@ -204,17 +198,13 @@ export function TripList() {
             )}
 
             <div className="flex gap-3">
-              <button
-                type="submit"
-                disabled={creating}
-                className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white text-sm font-medium rounded-lg transition-colors"
-              >
-                {creating ? 'Creating…' : 'Create Trip'}
+              <button type="submit" disabled={creating} className="btn-primary">
+                {creating ? 'Creating...' : 'Create Trip'}
               </button>
               <button
                 type="button"
                 onClick={() => { setShowForm(false); setForm(EMPTY_FORM); setFormError(null) }}
-                className="px-4 py-2 text-sm text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
+                className="px-4 py-2 text-sm text-stone-500 dark:text-stone-400 hover:text-stone-700 dark:hover:text-stone-200 transition-colors"
               >
                 Cancel
               </button>
@@ -224,12 +214,17 @@ export function TripList() {
       )}
 
       {trips.length === 0 ? (
-        <div className="text-center py-16 text-gray-400 dark:text-gray-500">
-          <p className="text-base mb-1">No trips yet.</p>
-          <p className="text-sm">Click "Create Trip" to get started.</p>
+        <div className="text-center py-20">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-forest-50 dark:bg-forest-900/30 mb-4">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-forest-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="m8 3 4 8 5-5 5 15H2L8 3z"/>
+            </svg>
+          </div>
+          <p className="text-base font-medium text-stone-500 dark:text-stone-400 mb-1">No trips yet</p>
+          <p className="text-sm text-stone-400 dark:text-stone-500">Click "New Trip" to plan your first adventure.</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {trips.map(trip => (
             <TripCard key={trip.id} trip={trip} />
           ))}

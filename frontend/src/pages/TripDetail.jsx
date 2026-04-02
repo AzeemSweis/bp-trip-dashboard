@@ -73,15 +73,15 @@ export function TripDetail() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center py-16 text-gray-400 dark:text-gray-500">
-        Loading trip…
+      <div className="flex items-center justify-center py-20 text-stone-400 dark:text-stone-500">
+        Loading trip...
       </div>
     )
   }
 
   if (error) {
     return (
-      <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-4 text-sm text-red-600 dark:text-red-400">
+      <div className="bg-red-50 dark:bg-red-900/20 rounded-2xl p-5 text-sm text-red-600 dark:text-red-400">
         Failed to load trip: {error}
       </div>
     )
@@ -96,67 +96,74 @@ export function TripDetail() {
         <div>
           <button
             onClick={() => navigate('/admin/trips')}
-            className="text-sm text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors mb-1 flex items-center gap-1"
+            className="text-sm text-stone-400 hover:text-stone-600 dark:hover:text-stone-300 transition-colors mb-2 flex items-center gap-1 font-medium"
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <polyline points="15 18 9 12 15 6" />
             </svg>
             All Trips
           </button>
-          <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100">{trip.name}</h1>
+          <h1 className="font-display text-2xl font-bold text-stone-800 dark:text-stone-100">{trip.name}</h1>
         </div>
         <button
           onClick={handleDelete}
           disabled={deleting}
-          className="shrink-0 text-sm text-red-500 hover:text-red-600 dark:hover:text-red-400 border border-red-200 dark:border-red-800 hover:border-red-400 rounded-lg px-3 py-2 transition-colors disabled:opacity-50"
+          className="btn-danger shrink-0"
         >
-          {deleting ? 'Deleting…' : 'Delete Trip'}
+          {deleting ? 'Deleting...' : 'Delete Trip'}
         </button>
       </div>
 
-      {/* Trip Info */}
-      <section className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-5">
-        <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100 mb-4">Trip Details</h2>
-        <TripInfoForm trip={trip} onUpdated={handleTripUpdated} />
-      </section>
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+        {/* Left column */}
+        <div className="lg:col-span-3 space-y-6">
+          {/* Trip Info */}
+          <section className="card">
+            <h2 className="section-title mb-5">Trip Details</h2>
+            <TripInfoForm trip={trip} onUpdated={handleTripUpdated} />
+          </section>
 
-      {/* Trail Links */}
-      <section className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-5">
-        <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100 mb-4">Trail Links</h2>
-        <TrailLinksList
-          tripId={trip.id}
-          links={trip.trail_links || []}
-          onLinksChanged={handleLinksChanged}
-        />
-      </section>
+          {/* Trail Links */}
+          <section className="card">
+            <h2 className="section-title mb-5">Trail Links</h2>
+            <TrailLinksList
+              tripId={trip.id}
+              links={trip.trail_links || []}
+              onLinksChanged={handleLinksChanged}
+            />
+          </section>
+        </div>
 
-      {/* Guests */}
-      <section className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-5">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-base font-semibold text-gray-900 dark:text-gray-100">
-            Guests ({trip.guests?.length ?? 0})
-          </h2>
-          {trip.guests && trip.guests.length > 0 && (
-            <button
-              onClick={handleCopyAllLinks}
-              className="text-xs text-gray-500 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 border border-gray-300 dark:border-gray-600 rounded-md px-3 py-1.5 transition-colors"
-            >
-              {copyStatus ?? 'Copy All Guest Links'}
-            </button>
-          )}
+        {/* Right column */}
+        <div className="lg:col-span-2">
+          <section className="card">
+            <div className="flex items-center justify-between mb-5">
+              <h2 className="section-title">
+                Guests ({trip.guests?.length ?? 0})
+              </h2>
+              {trip.guests && trip.guests.length > 0 && (
+                <button
+                  onClick={handleCopyAllLinks}
+                  className="btn-secondary text-xs py-1.5 px-3"
+                >
+                  {copyStatus ?? 'Copy All Links'}
+                </button>
+              )}
+            </div>
+            <div className="space-y-4">
+              <GuestList
+                guests={trip.guests || []}
+                tripId={trip.id}
+                onGuestDeleted={handleGuestDeleted}
+              />
+              <div className="pt-4 border-t border-stone-100 dark:border-stone-700/50">
+                <p className="text-sm font-medium text-stone-600 dark:text-stone-300 mb-3">Add Guest</p>
+                <AddGuestForm tripId={trip.id} onGuestAdded={handleGuestAdded} />
+              </div>
+            </div>
+          </section>
         </div>
-        <div className="space-y-4">
-          <GuestList
-            guests={trip.guests || []}
-            tripId={trip.id}
-            onGuestDeleted={handleGuestDeleted}
-          />
-          <div className="pt-2 border-t border-gray-100 dark:border-gray-700">
-            <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Add Guest</p>
-            <AddGuestForm tripId={trip.id} onGuestAdded={handleGuestAdded} />
-          </div>
-        </div>
-      </section>
+      </div>
     </div>
   )
 }

@@ -17,18 +17,18 @@ export function AdminLayout() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
-      <nav className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 py-3 flex items-center justify-between">
+    <div className="min-h-screen bg-surface dark:bg-stone-900 text-stone-800 dark:text-stone-100">
+      <nav className="bg-white/80 dark:bg-stone-800/80 backdrop-blur-md border-b border-stone-200/60 dark:border-stone-700/60 px-6 py-3.5 flex items-center justify-between sticky top-0 z-30">
         <NavLink
           to="/admin/trips"
-          className="font-bold text-lg text-emerald-600 dark:text-emerald-400 tracking-tight"
+          className="font-display font-bold text-lg text-forest-500 dark:text-forest-400 tracking-tight"
         >
-          Backpacking Trips
+          BP Trips
         </NavLink>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
           <button
             onClick={() => setDark(d => !d)}
-            className="p-2 rounded-md text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+            className="p-2 rounded-xl text-stone-400 dark:text-stone-500 hover:bg-stone-100 dark:hover:bg-stone-700/50 transition-colors"
             aria-label="Toggle dark mode"
           >
             {dark ? (
@@ -43,13 +43,13 @@ export function AdminLayout() {
           </button>
           <button
             onClick={handleLogout}
-            className="text-sm text-gray-600 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-400 transition-colors"
+            className="text-sm text-stone-500 dark:text-stone-400 hover:text-red-500 dark:hover:text-red-400 font-medium px-3 py-1.5 rounded-xl hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
           >
             Log out
           </button>
         </div>
       </nav>
-      <main className="max-w-5xl mx-auto px-4 py-6">
+      <main className="max-w-6xl mx-auto px-6 py-8">
         <Outlet />
       </main>
     </div>
