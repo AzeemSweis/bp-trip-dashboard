@@ -19,12 +19,26 @@ export function AdminLayout() {
   return (
     <div className="min-h-screen bg-surface dark:bg-stone-900 text-stone-800 dark:text-stone-100">
       <nav className="bg-white/80 dark:bg-stone-800/80 backdrop-blur-md border-b border-stone-200/60 dark:border-stone-700/60 px-6 py-3.5 flex items-center justify-between sticky top-0 z-30">
-        <NavLink
-          to="/admin/trips"
-          className="font-display font-bold text-lg text-forest-500 dark:text-forest-400 tracking-tight"
-        >
-          BP Trips
-        </NavLink>
+        <div className="flex items-center gap-4">
+          <NavLink
+            to="/admin/trips"
+            className="font-display font-bold text-lg text-forest-500 dark:text-forest-400 tracking-tight"
+          >
+            BP Trips
+          </NavLink>
+          <NavLink
+            to="/admin/calculator"
+            className={({ isActive }) =>
+              `text-sm font-medium transition-colors ${
+                isActive
+                  ? 'text-forest-500 dark:text-forest-400'
+                  : 'text-stone-400 dark:text-stone-500 hover:text-stone-600 dark:hover:text-stone-300'
+              }`
+            }
+          >
+            Calorie Calculator
+          </NavLink>
+        </div>
         <div className="flex items-center gap-2">
           <button
             onClick={() => setDark(d => !d)}
